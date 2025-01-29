@@ -10,6 +10,14 @@ resource "aws_security_group" "ec2" {
     security_groups = [var.alb_security_group_id]
   }
 
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -27,15 +35,14 @@ resource "aws_instance" "app" {
   instance_type = var.instance_type
   subnet_id     = var.subnet_id
   key_name      = "ec2-key"
-
   vpc_security_group_ids = [aws_security_group.ec2.id]
   
   # Enable public IP for instances in public subnet
   associate_public_ip_address = true
-
+  
   # IAM role for EC2 if needed
   # iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
-
+  
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {
     docker_image = var.docker_image
     docker_port  = var.docker_port

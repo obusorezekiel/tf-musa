@@ -14,7 +14,7 @@ key_name            = "ec2-key"
 docker_image        = "nginx:latest"
 docker_port         = 80
 
-engine_version  = "13.6"  # Adjust this based on the latest available version
+engine_version  = "13.6" # Adjust this based on the latest available version
 database_name   = "mydb"
 master_username = "admin"
 master_password = "YourStrongPasswordHere123!" # Change this
