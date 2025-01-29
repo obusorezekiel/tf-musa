@@ -68,7 +68,7 @@ module "rds" {
 
   environment           = var.environment
   vpc_id                = data.aws_vpc.existing.id
-  subnet_ids = ["subnet-05ab71c039512a788", "subnet-0e9876543210dcba2"]
+  subnet_ids = [data.aws_subnet.private_1.id, data.aws_subnet.private_2.id]
   ec2_security_group_id = module.ec2.security_group_id
   engine_version        = var.engine_version
   database_name         = var.database_name
