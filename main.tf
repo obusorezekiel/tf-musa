@@ -10,13 +10,26 @@ data "aws_vpc" "existing" {
 
 
 # Fetch existing public subnet using Subnet ID
-data "aws_subnet" "public" {
+data "aws_subnet" "public_1" {
   id = "subnet-0c634989343c90a5a"
 }
 
-data "aws_subnet" "private" {
+data "aws_subnet" "public_2" {
+  id = "subnet-0c634989343c90a5a"
+}
+
+
+data "aws_subnet" "private_1" {
   id = "subnet-05ab71c039512a788"
 }
+
+
+
+data "aws_subnet" "private_2" {
+  id = "subnet-05ab71c039512a788"
+}
+
+
 # # Fetch existing private subnets
 # data "aws_subnet" "private" {
 #   filter {
@@ -30,7 +43,7 @@ module "alb" {
 
   environment     = var.environment
   vpc_id          = data.aws_vpc.existing.id
-  subnet_id       = data.aws_subnet.public.id
+  subnet_ids      = [data.aws_subnet.public_1.id, data.aws_subnet.public_2.id]  # Updated to reference two public subnets
   instance_id     = module.ec2.instance_id
   certificate_arn = var.certificate_arn
   domain_name     = var.domain_name
@@ -55,7 +68,7 @@ module "rds" {
 
   environment           = var.environment
   vpc_id                = data.aws_vpc.existing.id
-  subnet_id             = data.aws_subnet.public.id
+  subnet_ids = ["subnet-05ab71c039512a788", "subnet-0e9876543210dcba2"]
   ec2_security_group_id = module.ec2.security_group_id
   engine_version        = var.engine_version
   database_name         = var.database_name

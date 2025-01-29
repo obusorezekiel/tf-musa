@@ -13,8 +13,13 @@ resource "aws_security_group" "aurora" {
 
 resource "aws_db_subnet_group" "aurora" {
   name       = "${var.environment}-aurora-subnet-group"
-  subnet_ids = [var.subnet_id]
+  subnet_ids = var.subnet_ids  # Ensure this includes two subnets in different AZs
+
+  tags = {
+    Name = "${var.environment}-aurora-subnet-group"
+  }
 }
+
 
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier     = "${var.environment}-aurora-cluster"

@@ -8,10 +8,11 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "subnet_id" {
-  description = "Subnet ID"
-  type        = string
+variable "subnet_ids" {
+  description = "List of private subnets for Aurora spanning multiple AZs"
+  type        = list(string)
 }
+
 
 variable "ec2_security_group_id" {
   description = "EC2 security group ID"
