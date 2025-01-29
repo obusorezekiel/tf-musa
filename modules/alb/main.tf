@@ -46,6 +46,7 @@ resource "aws_lb_listener" "https" {
   }
 }
 
+
 resource "aws_lb_target_group" "app" {
   name     = "${var.environment}-tg"
   port     = 80
@@ -64,6 +65,8 @@ resource "aws_lb_target_group" "app" {
     unhealthy_threshold = 2
   }
 }
+
+
 
 resource "aws_lb_target_group_attachment" "app" {
   target_group_arn = aws_lb_target_group.app.arn
