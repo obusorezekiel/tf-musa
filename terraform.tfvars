@@ -1,5 +1,5 @@
 # root/terraform.tfvars
-environment         = "prod"
+environment         = "dev"
 aws_region          = "us-east-1"
 vpc_cidr            = "10.0.0.0/16"
 vpc_name            = "migration-vpc"
@@ -14,12 +14,12 @@ key_name            = "ec2-key"
 docker_image        = "nginx:latest"
 docker_port         = 80
 
-# RDS Configuration
-engine_version  = "5.7.mysql_aurora.2.10.2"
+engine_version  = "13.6"  # Adjust this based on the latest available version
 database_name   = "mydb"
 master_username = "admin"
 master_password = "YourStrongPasswordHere123!" # Change this
 instance_class  = "db.t3.medium"
+engine          = "aurora-postgresql"
 
 # Load Balancer and Domain Configuration
 certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/your-certificate-id" # Replace with your cert ARN

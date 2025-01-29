@@ -14,7 +14,9 @@ data "aws_subnet" "public" {
   id = "subnet-0c634989343c90a5a"
 }
 
-
+data "aws_subnet" "private" {
+  id = "subnet-05ab71c039512a788"
+}
 # # Fetch existing private subnets
 # data "aws_subnet" "private" {
 #   filter {
