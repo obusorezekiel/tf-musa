@@ -3,11 +3,9 @@ provider "aws" {
 }
 
 # Fetch existing VPC
+# Fetch existing VPC using VPC ID
 data "aws_vpc" "existing" {
-  filter {
-    name   = "tag:Name"
-    values = [var.vpc_name] # Ensure this tag exists on your VPC
-  }
+  id = "vpc-094e58501f342fd8c"
 }
 
 
@@ -42,7 +40,7 @@ module "ec2" {
 
   environment           = var.environment
   vpc_id                = data.aws_vpc.existing.id
-  subnet_id             = data.aws_subnet.public.id
+  subnet_id             = data.aws_subnet.private.id
   ami_id                = var.ami_id
   instance_type         = var.instance_type
   alb_security_group_id = module.alb.security_group_id
@@ -55,7 +53,7 @@ module "rds" {
 
   environment           = var.environment
   vpc_id                = data.aws_vpc.existing.id
-  subnet_id             = data.aws_subnet.private.id
+  subnet_id             = data.aws_subnet.public.id
   ec2_security_group_id = module.ec2.security_group_id
   engine_version        = var.engine_version
   database_name         = var.database_name
