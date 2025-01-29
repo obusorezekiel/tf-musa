@@ -23,6 +23,24 @@ variable "vpc_cidr" {
   type        = string
 }
 
+variable "vpc_name" {
+  description = "Name tag of the existing VPC"
+  type        = string
+}
+
+variable "public_subnet_name" {
+  description = "Name tag of the existing public subnet"
+  type        = string
+}
+
+variable "private_subnet_name" {
+  description = "Name tag of the existing private subnet"
+  type        = string
+}
+
+
+
+
 variable "public_subnet_cidr" {
   description = "CIDR block for public subnet"
   type        = string

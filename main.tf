@@ -2,22 +2,35 @@ provider "aws" {
   region = var.aws_region
 }
 
-module "vpc" {
-  source = "./modules/vpc"
-
-  environment         = var.environment
-  vpc_cidr            = var.vpc_cidr
-  public_subnet_cidr  = var.public_subnet_cidr
-  private_subnet_cidr = var.private_subnet_cidr
-  availability_zone   = var.availability_zone
+# Fetch existing VPC
+data "aws_vpc" "existing" {
+  filter {
+    name   = "tag:Name"
+    values = [var.vpc_name] # Ensure this tag exists on your VPC
+  }
 }
+
+
+# Fetch existing public subnet using Subnet ID
+data "aws_subnet" "public" {
+  id = "subnet-0c634989343c90a5a"
+}
+
+
+# # Fetch existing private subnets
+# data "aws_subnet" "private" {
+#   filter {
+#     name   = "tag:Name"
+#     values = [var.private_subnet_name] # Ensure this tag exists on your subnet
+#   }
+# }
 
 module "alb" {
   source = "./modules/alb"
 
   environment     = var.environment
-  vpc_id          = module.vpc.vpc_id
-  subnet_id       = module.vpc.public_subnet_id
+  vpc_id          = data.aws_vpc.existing.id
+  subnet_id       = data.aws_subnet.public.id
   instance_id     = module.ec2.instance_id
   certificate_arn = var.certificate_arn
   domain_name     = var.domain_name
@@ -28,8 +41,8 @@ module "ec2" {
   source = "./modules/ec2"
 
   environment           = var.environment
-  vpc_id                = module.vpc.vpc_id
-  subnet_id             = module.vpc.public_subnet_id
+  vpc_id                = data.aws_vpc.existing.id
+  subnet_id             = data.aws_subnet.public.id
   ami_id                = var.ami_id
   instance_type         = var.instance_type
   alb_security_group_id = module.alb.security_group_id
@@ -41,8 +54,8 @@ module "rds" {
   source = "./modules/rds"
 
   environment           = var.environment
-  vpc_id                = module.vpc.vpc_id
-  subnet_id             = module.vpc.private_subnet_id
+  vpc_id                = data.aws_vpc.existing.id
+  subnet_id             = data.aws_subnet.private.id
   ec2_security_group_id = module.ec2.security_group_id
   engine_version        = var.engine_version
   database_name         = var.database_name
